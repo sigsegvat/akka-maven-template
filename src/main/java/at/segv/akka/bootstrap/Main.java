@@ -1,8 +1,6 @@
 package at.segv.akka.bootstrap;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSelection;
-import akka.actor.ActorSystem;
+import akka.actor.*;
 
 import akka.actor.dsl.Creators;
 import akka.pattern.Patterns;
@@ -13,6 +11,7 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,13 +27,14 @@ public class Main {
         ActorSystem botnet = ActorSystem.create("botnet");
         ActorRef actorRef = botnet.actorOf(EchoActor.props(),"EchoActor");
         LOGGER.info("created EchoActor: "+actorRef);
-        
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input;
         while(! "exit".equals(input= br.readLine()) ){
             ActorSelection remoteactor = botnet.actorSelection(input);
             askEcho(remoteactor, "hello");
+            remoteactor.tell(PoisonPill.getInstance(),null);
         }
 
         botnet.shutdown();
