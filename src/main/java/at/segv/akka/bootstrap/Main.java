@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
+import scala.concurrent.duration.Duration;
 
 
 import java.awt.*;
@@ -25,35 +26,19 @@ public class Main {
 
 
         ActorSystem botnet = ActorSystem.create("botnet");
-        ActorRef actorRef = botnet.actorOf(EchoActor.props(),"EchoActor");
-        LOGGER.info("created EchoActor: "+actorRef);
+        ActorRef actorRef = botnet.actorOf(BrokerActor.props(args[0], args[1]),"MyBroker");
+        LOGGER.info("created Actor: "+actorRef);
 
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input;
-        while(! "exit".equals(input= br.readLine()) ){
-            ActorSelection remoteactor = botnet.actorSelection(input);
-            askEcho(remoteactor, "hello");
-            remoteactor.tell(PoisonPill.getInstance(),null);
-        }
+        while(! "exit".equals(input= br.readLine()) ){ }
 
         botnet.shutdown();
 
 
     }
 
-    private static void askEcho(ActorSelection actorRef, String message) {
-        Timeout timeout = new Timeout(1, TimeUnit.SECONDS);
-
-        Future<Object> hello = Patterns.ask(actorRef, message, timeout);
-
-        try {
-            String result = (String) Await.result(hello, timeout.duration());
-            LOGGER.info(result);
-        } catch (Exception e) {
-            LOGGER.info("no response from "+actorRef);
-        }
-    }
 
 }
 

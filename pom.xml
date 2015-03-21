@@ -47,6 +47,14 @@
             <version>2.3.9</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>at.segv.play.broker</groupId>
+            <artifactId>broker-api_2.11</artifactId>
+            <version>1.0.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/broker-api_2.11-1.0.3.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
