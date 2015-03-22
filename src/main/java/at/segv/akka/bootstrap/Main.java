@@ -26,7 +26,7 @@ public class Main {
 
 
         ActorSystem botnet = ActorSystem.create("botnet");
-        ActorRef actorRef = botnet.actorOf(BrokerActor.props(args[0], args[1]),"MyBroker");
+        ActorRef actorRef = botnet.actorOf(BrokerActor.props(args[0], args[1]),"BrokerActor");
         LOGGER.info("created Actor: "+actorRef);
 
 
