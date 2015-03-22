@@ -4,6 +4,7 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.japi.Creator;
 import at.segv.play.broker.api.CallOrder;
+import at.segv.play.broker.api.PutOrder;
 import at.segv.play.broker.api.Register;
 import at.segv.play.broker.api.Tick;
 import org.slf4j.Logger;
@@ -43,8 +44,10 @@ public class BrokerActor extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
        LOGGER.info(message.toString());
-        sender().tell("ok",self());
-        // api classes are Tick, Register(name), PutOrder(int), CallOrder(int)
+        if(message instanceof Tick){
+            sender().tell(new PutOrder(1),self());
+        }
+                // api classes are Tick, Register(name), PutOrder(int), CallOrder(int)
 
     }
 

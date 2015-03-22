@@ -3,6 +3,8 @@ import akka.actor.Props;
 import akka.pattern.Patterns;
 import akka.testkit.TestActorRef;
 import at.segv.akka.bootstrap.BrokerActor;
+import at.segv.play.broker.api.PutOrder;
+import at.segv.play.broker.api.Tick;
 import org.junit.Test;
 import scala.concurrent.Future;
 
@@ -19,10 +21,10 @@ public class BrokerActorTest {
         final Props props = Props.create(BrokerActor.class, "test", "tesxt");
         final TestActorRef<BrokerActor> ref = TestActorRef.create(ActorSystem.create(), props, "testA");
 
-        String message = "The quick brown fox jumps over the lazy dog";
+        Tick message = new Tick(1,1000,1,1);
         Future<Object> future = Patterns.ask(ref, message, 1000);
         Object answer = future.value().get().get();
-        assertEquals("ok", answer);
+        assertEquals(PutOrder.class, answer.getClass());
 
     }
 }
